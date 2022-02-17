@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deploy
+  name: prod-deploy
 spec:
   replicas: 2
   selector:
     matchLabels:
-      type: hello-app
+      type: prod-deploy
   template:
     metadata:
       labels:
-        type: hello-app
+        type: prod-deploy
     spec:
      containers:
      - name: nginx
-       image: ofandoud/hello-nginx:v1.2
+       image: ofandoud/hello-world:latest
        ports:
        - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-deploy-service	
+  name: prod-deploy-service	
 spec:
   type: LoadBalancer
   selector:
-    type: hello-app
+    type: prod-deploy
   ports:
     - protocol: TCP
       port: 80
