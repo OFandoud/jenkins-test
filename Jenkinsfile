@@ -1,21 +1,28 @@
 pipeline {
-    agent {label 'slave-1'}
-
-    stages {
-        stage('Build') {
+  agent {label 'slave-1'}
+stages {
+          stage('start') {
             steps {
-                echo 'Building..'
+              script {
+              withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh """
+                    echo login to dockerhub
+                    docker login -u ${USERNAME} -p ${PASSWORD}
+                    echo build dockerfile
+                    docker build -t $DOCKER_REPO:latest .
+                    echo upload to dockerhub
+                    docker push $DOCKER_REPO:latest
+                """
+              }
+              
             }
-        }
-        stage('Test') {
+            }
+          }
+          stage('deploy') {
             steps {
-                echo 'Testing..'
+              echo deploy 
             }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
             }
-        }
-    }
+          }
+}
 }
