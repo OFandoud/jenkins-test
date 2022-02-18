@@ -1,20 +1,27 @@
+
 pipeline {
-  agent {label 'slave-1'}
-stages {
-          stage('start') {
+    agent {label 'slave-1' }
+
+    stages {
+        stage('Build image') {
             steps {
-              
-              withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'user' ,  passwordVariable: 'pass',)])       {
+    		sh """
+    		    docker build . -t $docker_repo:v6
+    		    docker login -u ${user} -p ${pass}
+    		    docker push $docker_repo:v6
+    		    echo done
+    		"""
+                }
+            }
+        }
+        stage ('deploy app'){
+            steps {
                 sh """
-                    docker login -u ${USERNAME} -p ${PASSWORD}
-                    docker build  . -t ofandoud/hello-world:latest
-                    docker push ${docker-image-repo}:latest
-                """
-              
-              
+                kubectl apply -f prod.yaml
+                echo done
+            """
             }
-            }
-          }
-  
-}
-}
+        }
+        }
+    }
