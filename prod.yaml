@@ -14,7 +14,7 @@ spec:
     spec:
      containers:
      - name: nginx
-       image: ofandoud/hello-world:latest
+       image: ofandoud/hello-world
        ports:
        - containerPort: 80
 ---
