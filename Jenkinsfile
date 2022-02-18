@@ -7,9 +7,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'user' ,  passwordVariable: 'pass',)])       {
     		sh """
-    		     docker build . -t ofandoud/hello-world:latest
-    		     docker login --username ${user} --password ${pass}
-    		     docker push ofandoud/hello-world:latest
+    		     sudo docker build . -t ofandoud/hello-world:latest
+    		     sudo docker login --username ${user} --password ${pass}
+    		     sudo docker push ofandoud/hello-world:latest
     		    echo done
     		"""
                 }
