@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: prod-deploy
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       type: prod-deploy
