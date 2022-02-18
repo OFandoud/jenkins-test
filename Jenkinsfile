@@ -1,21 +1,27 @@
+
 pipeline {
-    agent any
+    agent {label 'slave-1' }
 
     stages {
-        stage('Build') {
+        stage('Build image') {
             steps {
-                echo 'Building..'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'user' ,  passwordVariable: 'pass',)])       {
+    		sh """
+    		    docker build . -t $docker_repo:v6
+    		    docker login -u ${user} -p ${pass}
+    		    docker push $docker_repo:v6
+    		    echo done
+    		"""
+                }
             }
         }
-        stage('Test') {
+        stage ('deploy app'){
             steps {
-                echo 'Testing..'
+                sh """
+                kubectl apply -f prod.yaml
+                echo done
+            """
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
         }
     }
-}
